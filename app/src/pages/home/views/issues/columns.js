@@ -1,5 +1,3 @@
-import React from 'react';
-import { Button } from "bootstrap";
 import { Column } from "react-base-table";
 
 const ISSUE_COLUMN = [

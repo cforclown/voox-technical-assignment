@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { TokenExpiredError, verify } from 'jsonwebtoken';
+import { JsonWebTokenError, NotBeforeError, TokenExpiredError, verify } from 'jsonwebtoken';
 import { Environment, Logger } from '../../common';
 import { HttpCodes } from '../../exceptions';
 import { dro } from '../../utils';
@@ -30,7 +30,7 @@ export function authenticateRequest (excludePaths: string[]) {
 
       next();
     } catch (err) {
-      if (err instanceof TokenExpiredError) {
+      if (err instanceof TokenExpiredError || err instanceof JsonWebTokenError || err instanceof NotBeforeError) {
         Logger.error(err.message);
         return res.status(HttpCodes.Unauthorized).send(dro.error(err.message));
       }

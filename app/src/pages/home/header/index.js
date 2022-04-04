@@ -1,14 +1,17 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Dropdown } from "react-bootstrap";
 import UserAvatar from "../../../components/user-avatar";
+import { logout } from "../../../api/api-request";
 import "./index.scss";
+import { DeleteSession } from "../../../reducer/actions";
 
 function Header({ history, onToggleSidebar }) {
   const user = useSelector((state) => state.session.user);
+  const dispatch = useDispatch();
 
   function onToggleSidebarClick() {
       if (!onToggleSidebar) return;
@@ -35,6 +38,16 @@ function Header({ history, onToggleSidebar }) {
   function onSettingsClick() {
       if (!history) return;
       history.push("/settings");
+  }
+  async function onLogout() {
+      if (!history) return;
+      try {
+        await logout();
+        dispatch(DeleteSession());
+      } catch (err) {
+        console.log(err.message);
+      }
+      history.push("/login");
   }
 
   return (
@@ -63,7 +76,7 @@ function Header({ history, onToggleSidebar }) {
                       </Dropdown.Item>
                       <Dropdown.Divider />
                       <Dropdown.Item>
-                          <AccountDropdownMenuItem icon={["fa", "sign-out-alt"]} title="Logout" />
+                          <AccountDropdownMenuItem icon={["fa", "sign-out-alt"]} title="Logout" onClickCallback={onLogout} />
                       </Dropdown.Item>
                   </Dropdown.Menu>
               </Dropdown>

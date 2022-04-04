@@ -19,7 +19,7 @@ const IssueSchema = yup.object({
 })
 
 function CreateEditIssue({ history, location }) {
-  const issue = location && location.state.state.issue ? location.state.state.issue : null;
+  const issue = location && location.state && location.state.state.issue ? location.state.state.issue : null;
   const [isLoading, setIsLoading] = useState(false);
 
   async function onSubmit(values){
@@ -73,7 +73,8 @@ function CreateEditIssue({ history, location }) {
             <IssueCustomSelectField name="label" desc="Label" options={[
               { value: 'electrical', label: 'electrical' },
               { value: 'mechanical', label: 'mechanical' },
-              { value: 'landscape', label: 'landscape' }
+              { value: 'landscape', label: 'landscape' },
+              { value: 'plumbing', label: 'plumbing' }
             ]} disabled={isLoading} />
             <div className="cl-issue-form-row cl-issue-form-button ">
               <button type="submit">
