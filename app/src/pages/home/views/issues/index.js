@@ -35,6 +35,18 @@ function Issues({ history }) {
   const [isLoading, setIsLoading] = useState(false)
 
   // eslint-disable-next-line react/display-name
+  ISSUE_COLUMN[2].cellRenderer = ({ rowData }) => (
+    <div className='cl-issues-label-rendered'>
+    {
+      rowData.label && Array.isArray(rowData.label) ? rowData.label.map((label, index) => (
+        <button key={index} type="button" className="btn btn-warning py-0 px-1 mx-1" style={{cursor: "auto"}}>
+          {label}
+        </button>
+      )) : null
+    }
+    </div>
+  )
+  // eslint-disable-next-line react/display-name
   ISSUE_COLUMN[3].cellRenderer = ({ rowData }) => (
     <>
       <button 
