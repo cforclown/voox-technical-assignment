@@ -1,0 +1,84 @@
+.cl-issue-form-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  max-width: 100%;
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
+  margin-left: 0.6rem;
+  padding-bottom: 2.2rem;
+
+  position: relative;
+}
+
+
+// .cl-issue-form-row>optgroup {
+//   font-family: "Exo" !important;
+// }
+
+.cl-issue-form-row input {
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  font-size: 1rem;
+  padding-left: 0.4rem;
+  padding-bottom: 0.6rem;
+  box-shadow: inset 0px -3px 0px 0px rgba(187, 187, 187, 0.2);
+  transition: box-shadow 0.2s ease-in;
+}
+
+.cl-issue-form-row input:focus {
+  box-shadow: inset 0px -3px 0px 0px #5f27cdb3;
+  outline: none;
+}
+
+.cl-issue-form-row input::-webkit-input-placeholder {
+  opacity: 1;
+  transition: opacity 0.25s ease-out;
+}
+
+.cl-issue-form-row input:hover::-webkit-input-placeholder,
+.cl-issue-form-row input:focus::-webkit-input-placeholder {
+  opacity: 0;
+}
+
+.cl-issue-form-row label {
+  width: 100%;
+  padding-top: 0.4rem;
+  padding-left: 0.4rem;
+  padding-bottom: 0.4rem;
+  color: rgba(187, 187, 187, 0.9);
+}
+
+.cl-issue-form-row label.cl-issue-form-error-message {
+  color: rgba(255, 0, 0, 0.9) !important;
+  font-size: 1rem;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+.cl-issue-form-row .css-b62m3t-container {
+  width: 100%;
+}
+
+.cl-issue-form-row button {
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  color: white;
+  font-weight: 700;
+  background: #d63031;
+  border: 0px;
+  cursor: pointer;
+  transition: opacity 0.25s ease-out;
+}
+
+.cl-issue-form-row button:hover {
+  opacity: 0.8;
+}
+
+.cl-issue-form-button {
+  margin-top: 2rem;
+}
