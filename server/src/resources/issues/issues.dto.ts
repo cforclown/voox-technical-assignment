@@ -6,10 +6,14 @@ const FindIssuesPaginationSchema = PaginationSchema.keys({
   sort: Joi.object({
     by: Joi.string().valid('title', 'priority', 'label').allow(null).default('title'),
     order: Joi.string().valid(SortOrder.ASC, SortOrder.DESC).allow(null).default(SortOrder.ASC)
+  }).default({
+    by: 'title',
+    order: 1
   })
 });
 
 export const FindIssuesSchema = FindSchema.keys({
+  priority: Joi.string().allow(''),
   pagination: FindIssuesPaginationSchema.required()
 });
 

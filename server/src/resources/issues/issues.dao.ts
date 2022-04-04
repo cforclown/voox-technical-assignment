@@ -15,18 +15,25 @@ export class IssuesDao {
     }).exec();
   }
 
-  async find ({ query, pagination }: FindIssuesPayload): Promise<FindIssuesResult> {
+  async find ({ query, priority, pagination }: FindIssuesPayload): Promise<FindIssuesResult> {
     const result = await this.issuesModel
       .aggregate([
         {
           $match: {
-            $or: [
+            $and: [
               {
                 title: {
                   $regex: query ?? '',
                   $options: 'i'
                 }
-              }
+              },
+              {
+                priority: {
+                  $regex: priority ?? '',
+                  $options: 'i'
+                }
+              },
+              { archived: false }
             ]
           }
         },
@@ -50,6 +57,7 @@ export class IssuesDao {
     const data = {
       data: [],
       query,
+      priority,
       pagination: {
         ...pagination,
         pageCount: 0
@@ -65,7 +73,7 @@ export class IssuesDao {
   }
 
   async get (issueId: string): Promise<Issue> {
-    const issue = await this.issuesModel.findById(issueId).exec();
+    const issue = await this.issuesModel.findById(issueId, { archived: false }).exec();
     if (!issue) {
       throw new RestApiException('Issue not found');
     }
@@ -78,7 +86,7 @@ export class IssuesDao {
   }
 
   async update (payload: Issue): Promise<Issue> {
-    const issue = await this.issuesModel.findByIdAndUpdate({ _id: payload._id }, payload, { new: true }).exec();
+    const issue = await this.issuesModel.findByIdAndUpdate({ _id: payload._id, archived: false }, payload, { new: true }).exec();
     if (!issue) {
       throw new RestApiException('Issue not found');
     }

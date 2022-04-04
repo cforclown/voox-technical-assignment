@@ -13,6 +13,7 @@ export interface Issue {
 
 export type FindIssuesSortBy = 'title' | 'priority' | 'label';
 export type FindIssuesPayload = FindPayload & {
+  priority?: string;
   pagination: {
     sort: PaginationSort & {
       by: FindIssuesSortBy;

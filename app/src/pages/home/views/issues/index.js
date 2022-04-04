@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types'
 import BaseTable, { AutoResizer } from 'react-base-table';
 import { Card, CardHeader, CardBody } from '../../content/card';
@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { toast } from 'react-toastify';
 import { ApiRequestException } from '../../../../exceptions/api-request-exceptions';
 import { API_REQUEST_EXCEPTION_CODES } from '../../../../exceptions/exceptions-types';
-import { getIssues, deleteIssue } from '../../../../resources/issues';
+import { getIssues, deleteIssue, findIssues } from '../../../../resources/issues';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ISSUE_COLUMN from './columns';
 import './index.scss';
@@ -20,7 +20,7 @@ const HeaderContainer = styled.div`
   align-items: center;
 `
 const TableContainer = styled.div`
-  height: calc(100vh - (56px + 36px) - 5.25rem);
+  height: calc(100vh - (56px + 36px) - 15em);
 `
 
 function Issues({ history }) {
@@ -32,7 +32,16 @@ function Issues({ history }) {
       order: 'asc'
     }
   })
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [query, _setQuery] = useState({
+    query: "",
+    priority: ""
+  });
+  const queryRef = useRef(query);
+  function setQuery(newState) {
+    queryRef.current = newState;
+    _setQuery(newState);
+  }
 
   // eslint-disable-next-line react/display-name
   ISSUE_COLUMN[2].cellRenderer = ({ rowData }) => (
@@ -69,13 +78,13 @@ function Issues({ history }) {
   )
 
   useEffect(async ()=>{
-    getData();
+    getData(queryRef.current);
   }, []);
 
-  async function getData() {
+  async function getData(query) {
     try {
       setIsLoading(true);
-      const data = (await getIssues()).map(issue => {
+      const data = (await findIssues(query)).data.map(issue => {
         return {
           ...issue,
           id: issue._id
@@ -105,7 +114,7 @@ function Issues({ history }) {
     try {
       setIsLoading(true);
       await deleteIssue(issueId);
-      getData();
+      getData(queryRef.current);
     } catch(err) {
       setIsLoading(false);
       toast.error(err.message);
@@ -147,17 +156,48 @@ function Issues({ history }) {
     });
   }
 
+  function onQueryChange(e) {
+    const newQuery = {
+      ...queryRef.current,
+      query: e.target.value
+    }
+    setQuery(newQuery)
+    getData(newQuery)
+  }
+
+  function onPriorityChange(e) {
+    const newQuery = {
+      ...queryRef.current,
+      priority: e.target.value
+    }
+    setQuery(newQuery)
+    getData(newQuery)
+  }
+
   return (
     <Card>
       <CardHeader>
         <HeaderContainer>
           <h6>ISSUES</h6>
-          <button type="button" className="btn btn-primary" onClick={() => history.push('/issues/create-edit-issue')}>
+          <button type="button" className="btn btn-primary" value={queryRef.current.query} onClick={() => history.push('/issues/create-edit-issue')}>
             <FontAwesomeIcon icon={['fas', 'plus']} />
           </button>
         </HeaderContainer>
       </CardHeader>
       <CardBody>
+        <div className='cl-issues-search-row'>
+          <label className="form-label">Query</label>
+          <input type="text" className='form-control' onChange={onQueryChange} />
+        </div>
+        <div className='cl-issues-search-row'>
+          <label className="form-label">Priority</label>
+          <select className="form-select form-select-sm" aria-label=".form-select-sm example" value={queryRef.current.priority} onChange={onPriorityChange}>
+            <option value="">All</option>
+            <option value="high">High</option>
+            <option value="mid">Mid</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
         <TableContainer>
         {
           issues.data && issues.data.length ?

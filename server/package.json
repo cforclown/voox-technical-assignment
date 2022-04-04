@@ -8,7 +8,7 @@
     "url": "https://github.com/cforclown/mern-stack-boilerplate-typescript"
   },
   "scripts": {
-    "init": "ts-node src/scripts/insert-initial-data.ts",
+    "init": "npm run init:dev",
     "start": "ts-node src/index.ts",
     "test": "jest",
     "test:coverage": "jest --coverage",
