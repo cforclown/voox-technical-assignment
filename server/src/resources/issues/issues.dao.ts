@@ -22,10 +22,21 @@ export class IssuesDao {
           $match: {
             $and: [
               {
-                title: {
-                  $regex: query ?? '',
-                  $options: 'i'
-                }
+                $or: [
+                  {
+                    title: {
+                      $regex: query ?? '',
+                      $options: 'i'
+                    }
+                  },
+                  {
+                    label: {
+                      $regex: query ?? '',
+                      $options: 'i',
+                      $nin: ['acmeblahcorp']
+                    }
+                  }
+                ]
               },
               {
                 priority: {
